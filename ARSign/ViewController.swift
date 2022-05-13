@@ -50,26 +50,31 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         self.session?.startRunning()
     }
     
-    override func didReceiveMemoryWarning() {
+    override func didReceiveMemoryWarning()
+    {
         super.didReceiveMemoryWarning()
     }
     
     // Ensure that the interface stays locked in Portrait.
-    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask
+    {
         return .portrait
     }
     
     // Ensure that the interface stays locked in Portrait.
-    override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
+    override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation
+    {
         return .portrait
     }
     
     // MARK: AVCapture Setup
     
     /// - Tag: CreateCaptureSession
-    fileprivate func setupAVCaptureSession() -> AVCaptureSession? {
+    fileprivate func setupAVCaptureSession() -> AVCaptureSession?
+    {
         let captureSession = AVCaptureSession()
-        do {
+        do
+        {
             let inputDevice = try self.configureBackCamera(for: captureSession)
             self.configureVideoDataOutput(for: inputDevice.device, resolution: inputDevice.resolution, captureSession: captureSession)
             self.designatePreviewLayer(for: captureSession)
@@ -312,7 +317,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         
         let normalizedCenterPoint = CGPoint(x: 0.5, y: 0.5)
         
-        guard let rootLayer = self.rootLayer else {
+        guard let rootLayer = self.rootLayer else
+        {
             self.presentErrorAlert(message: "view was not property initialized")
             return
         }
@@ -443,7 +449,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
                 landmarks.noseCrest,
                 landmarks.medianLine
             ]
-            for openLandmarkRegion in openLandmarkRegions where openLandmarkRegion != nil {
+            for openLandmarkRegion in openLandmarkRegions where openLandmarkRegion != nil
+            {
                 self.addPoints(in: openLandmarkRegion!, to: faceLandmarksPath, applying: affineTransform, closingWhenComplete: false)
             }
             
@@ -455,17 +462,20 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
                 landmarks.innerLips,
                 landmarks.nose
             ]
-            for closedLandmarkRegion in closedLandmarkRegions where closedLandmarkRegion != nil {
+            for closedLandmarkRegion in closedLandmarkRegions where closedLandmarkRegion != nil
+            {
                 self.addPoints(in: closedLandmarkRegion!, to: faceLandmarksPath, applying: affineTransform, closingWhenComplete: true)
             }
         }
     }
     
     /// - Tag: DrawPaths
-    fileprivate func drawFaceObservations(_ faceObservations: [VNFaceObservation]) {
+    fileprivate func drawFaceObservations(_ faceObservations: [VNFaceObservation])
+    {
         guard let faceRectangleShapeLayer = self.detectedFaceRectangleShapeLayer,
-            let faceLandmarksShapeLayer = self.detectedFaceLandmarksShapeLayer
-            else {
+              let faceLandmarksShapeLayer = self.detectedFaceLandmarksShapeLayer
+        else
+        {
             return
         }
         
@@ -493,16 +503,20 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     // MARK: AVCaptureVideoDataOutputSampleBufferDelegate
     /// - Tag: PerformRequests
     // Handle delegate method callback on receiving a sample buffer.
-    public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+    public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection)
+    {
         
         var requestHandlerOptions: [VNImageOption: AnyObject] = [:]
         
         let cameraIntrinsicData = CMGetAttachment(sampleBuffer, key: kCMSampleBufferAttachmentKey_CameraIntrinsicMatrix, attachmentModeOut: nil)
-        if cameraIntrinsicData != nil {
+        if cameraIntrinsicData != nil
+        {
             requestHandlerOptions[VNImageOption.cameraIntrinsics] = cameraIntrinsicData
         }
         
-        guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
+        guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
+        else
+        {
             print("Failed to obtain a CVPixelBuffer for the current output frame.")
             return
         }
